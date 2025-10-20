@@ -1,380 +1,273 @@
-# 🧪 Punto 1 - El Laboratorio de los Beans
+# 🧩 Punto 3 – La Conspiración de los Qualifiers
 
-## *Tema: Creación, inyección y ciclo de vida de beans*
-
-Este laboratorio tiene como propósito **ilustrar el comportamiento del contenedor de Inversión de Control (IoC)** de Spring y **cómo se gestionan los beans** dependiendo de cómo son definidos: mediante anotaciones (`@Component`) o de forma manual a través de clases de configuración (`@Configuration` y `@Bean`).
-
-También se analiza el **ciclo de vida de los beans** y el efecto del uso de la anotación `@Lazy` sobre la creación de instancias.
+## *Tema: Resolución de dependencias y ambigüedades en el contenedor IoC de Spring Boot*
 
 ---
 
-## 🔹 1. Bean con el mismo nombre en la clase y en la clase de configuración
+## 🎯 **Objetivo del laboratorio**
 
-### Clase `ExperimentService`
+En este ejercicio exploramos cómo el contenedor de **Inversión de Control (IoC)** de Spring resuelve **ambigüedades** cuando existen **múltiples implementaciones** de una misma interfaz.
+
+También analizamos cómo afectan las anotaciones:
+
+* `@Primary` 🥇
+* `@Qualifier` 🎯
+* `@Autowired(required = false)` 💤
+
+Y cómo estas determinan **qué bean se inyecta**, **cuándo se inyecta**, y **qué sucede si el bean no existe**.
+
+---
+
+## 🧱 1. Reto 1 — Dos implementaciones, un solo contrato
+
+Creamos la interfaz base `DiscountService` y dos implementaciones con descuentos diferentes.
+
+### Interface base
 
 ```java
-@Component("nombreBean")
-public class ExperimentService {
-
-    public ExperimentService() {
-        System.out.println("ExperimentService Bean created");
-    }
-}
-```
-
-### Clase de Configuración
-
-```java
-@Configuration
-public class ExperimentServiceConfig {
-
-    @Bean("nombreBean")
-    @Lazy
-    public ExperimentService experimentService() {
-        System.out.println("Created from configuration class");
-        return new ExperimentService();
-    }
-}
-```
-
-### Punto de Acceso de la Aplicación
-
-```java
-@SpringBootApplication
-public class BeanlabApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(BeanlabApplication.class, args);
-    }
-
-//    @Bean
-//    ApplicationRunner runner(@Qualifier("nombreBean") ExperimentService experimentService) {
-//        return args -> {
-//            System.out.println("Starting application");
-//        };
-//    }
-}
-```
-
-### Salida en Consola
-
-```
-...
-Created from configuration class
-ExperimentService Bean created
-...
-
-Process finished with exit code 0
-```
-
-### 🧩 Análisis y Conclusiones
-
-* ✅ **Se crea una sola instancia del Bean.**
-  Aunque el bean está declarado tanto con `@Component` como con `@Bean`, Spring detecta el conflicto y **prioriza la definición manual** en la clase de configuración.
-
-* ⚙️ **Prioridad del Bean definido en clase de configuración.**
-  Cuando dos beans comparten el mismo nombre, **Spring considera la definición dentro de la clase `@Configuration` como dominante**, y omite la versión `@Component`.
-
-* ⚠️ **No se genera excepción por duplicidad de nombre.**
-  Spring Boot maneja la situación de forma silenciosa, reemplazando la definición automática (`@Component`) por la manual (`@Bean`).
-
----
-
-## 🔹 2. Usando la anotación `@Lazy` en la clase de configuración
-
-### Clase de Configuración
-
-```java
-@Configuration
-public class ExperimentServiceConfig {
-
-    @Bean("nombreBean")
-    @Lazy
-    public ExperimentService experimentService() {
-        System.out.println("Created from configuration class");
-        return new ExperimentService();
-    }
-}
-```
-
-### Salida en Consola
-
-```
-...
-
-Process finished with exit code 0
-```
-
-### 🧩 Análisis y Conclusiones
-
-* 💤 **El bean no se crea durante el arranque de la aplicación.**
-  La anotación `@Lazy` en una definición `@Bean` **retrasa la creación del objeto hasta que sea realmente solicitado** por el contenedor o inyectado en otro bean.
-
-* ⚙️ **Persisten las reglas de prioridad.**
-  A pesar de que el bean no se inicializa inmediatamente, Spring sigue **considerando válida la definición manual** (en la clase `@Configuration`) por encima de la anotación `@Component`.
-
-* 💡 **El ciclo de vida del bean se difiere.**
-  En este caso, el bean permanecerá en estado “pendiente” dentro del contexto de Spring y **no se instanciará hasta que se invoque explícitamente** desde otra clase o componente.
-
----
-
-## 🔹 3. Usando la anotación `@Lazy` en la clase `ExperimentService`
-
-### Clase `ExperimentService`
-
-```java
-@Component("nombreBean")
-@Lazy
-public class ExperimentService {
-
-    public ExperimentService() {
-        System.out.println("ExperimentService Bean created");
-    }
-}
-```
-
-### Salida en Consola
-
-```
-...
-Created from configuration class
-ExperimentService Bean created
-...
-
-Process finished with exit code 0
-```
-
-### 🧩 Análisis y Conclusiones
-
-* ✅ **El bean sí se crea.**
-  Aunque la clase está marcada con `@Lazy`, la presencia del bean con el mismo nombre en la clase de configuración hace que **Spring use la versión definida manualmente** y **termine creando el bean** durante el arranque (a menos que también esté marcada con `@Lazy`).
-
-* ⚙️ **Prioridad de la configuración manual.**
-  Como en los casos anteriores, Spring considera **la definición del bean en la clase `@Configuration` como prioritaria**, incluso si el componente también está definido con `@Component`.
-
-* 🧠 **El `@Lazy` en la clase `@Component` no tiene efecto si el bean es sobrescrito.**
-  Dado que el bean `nombreBean` fue redefinido manualmente, **la configuración de pereza en la clase original no afecta el comportamiento final.**
-
----
-
-## 🔄 Ciclo de Vida de un Bean en Spring
-
-1. **Instanciación:**
-   El contenedor de Spring crea el objeto (o lo posterga si está marcado con `@Lazy`).
-
-2. **Inyección de dependencias:**
-   Spring resuelve e inyecta las dependencias necesarias (`@Autowired`, `@Qualifier`, etc.).
-
-3. **Inicialización:**
-   Se ejecutan métodos marcados con `@PostConstruct` o los definidos mediante `initMethod`.
-
-4. **Uso del bean:**
-   El bean queda disponible dentro del contexto de Spring.
-
-5. **Destrucción:**
-   Al cerrar el contexto de la aplicación, Spring ejecuta los métodos marcados con `@PreDestroy` o configurados mediante `destroyMethod`.
-
----
-
-## ⚖️ Diferencias entre Beans creados manualmente y Beans automáticos
-
-| Característica             | `@Component`                                                             | `@Bean` en `@Configuration`                                                         |
-| -------------------------- | ------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
-| **Definición**             | Automática por escaneo de paquetes (`@ComponentScan`)                    | Manual dentro de una clase `@Configuration`                                         |
-| **Control del nombre**     | Opcional (por defecto el nombre es el de la clase con minúscula inicial) | Total (se puede definir explícitamente el nombre)                                   |
-| **Prioridad**              | Baja (puede ser sobrescrito por un `@Bean` con el mismo nombre)          | Alta (sobrescribe a un `@Component`)                                                |
-| **Configuración avanzada** | Limitada                                                                 | Permite personalizar dependencias, ciclo de vida y alcance                          |
-| **Lazy Initialization**    | Se aplica al componente individual                                       | Puede aplicarse globalmente o a nivel de método                                     |
-| **Uso recomendado**        | Clases simples con comportamiento autónomo                               | Casos donde se requiere control detallado o beans externos (por ejemplo, librerías) |
-
----
-
-## 🧾 Conclusión General
-
-Este laboratorio demuestra cómo el **contenedor de IoC de Spring** gestiona y prioriza los beans según su origen.
-En resumen:
-
-* Spring **detecta y evita conflictos de nombres** entre beans.
-* Los **beans definidos manualmente** (en clases `@Configuration`) **tienen prioridad** sobre los automáticos (`@Component`).
-* El uso de `@Lazy` **controla el momento de la instanciación**, pero **no altera la prioridad de las definiciones**.
-* Comprender estos comportamientos es esencial para construir aplicaciones **predecibles, eficientes y libres de conflictos de inyección.**
-
----
-🧪 **_Punto 3 — La Conspiración de los Qualifiers_**
-Tema: Resolución de dependencias y ambigüedades en Spring Boot
-
-Este laboratorio tiene como objetivo entender cómo el contenedor de Spring resuelve dependencias cuando existen múltiples implementaciones de una misma interfaz, y cómo podemos controlar este comportamiento utilizando las anotaciones:
-
-@Primary → define la implementación por defecto.
-
-@Qualifier → especifica exactamente cuál bean inyectar.
-
-@Autowired(required=false) → permite dependencias opcionales sin generar errores.
-
-🔹 Reto 1 — Creación de las implementaciones
-
-Se definieron dos clases que implementan la interfaz DiscountService:
-
 public interface DiscountService {
-double apply(double amount);
-String name();
+    double apply(double amount);
+    String name();
 }
+```
 
-Clase BasicDiscountService
+### BasicDiscountService (10% off)
+
+```java
 @Service
+// @Primary  // ← Se activará en el Reto 3
 public class BasicDiscountService implements DiscountService {
-public double apply(double amount) { return amount * 0.90; }
-public String name() { return "BASIC"; }
+    @Override public double apply(double amount) { return amount * 0.90; }
+    @Override public String name() { return "BASIC"; }
 }
+```
 
-Clase PremiumDiscountService
+### PremiumDiscountService (20% off)
+
+```java
 @Service
+// @Service("vipDiscountService")  // ← Se usará en el Reto 4
 public class PremiumDiscountService implements DiscountService {
-public double apply(double amount) { return amount * 0.80; }
-public String name() { return "PREMIUM"; }
+    @Override public double apply(double amount) { return amount * 0.80; }
+    @Override public String name() { return "PREMIUM"; }
 }
+```
 
- **Análisis**
+---
 
-Ambas clases están anotadas con @Service, por lo tanto Spring registra dos beans del mismo tipo (DiscountService) en el contexto.
+## 💥 2. Reto 2 — Ambigüedad al inyectar sin especificar
 
-🔹 Reto 2 — Inyección sin especificar cuál usar
+El `OrderService` intenta inyectar una única instancia de `DiscountService`, pero Spring encuentra **dos candidatos** (`BasicDiscountService` y `PremiumDiscountService`).
 
-En la clase OrderService, se inyectó la interfaz DiscountService sin usar @Qualifier ni @Primary:
+### OrderService (versión inicial)
 
+```java
 @Service
 public class OrderService {
-private final DiscountService discountService;
+
+    private final DiscountService discountService;
 
     public OrderService(DiscountService discountService) {
         this.discountService = discountService;
     }
+
+    public double checkout(double amount) {
+        return discountService.apply(amount);
+    }
+
+    public String discountInUse() {
+        return discountService.name();
+    }
 }
+```
 
- **Error generado**
+### 🖥️ Consola
 
-Al ejecutar la aplicación, Spring muestra:
+```
+***************************
+APPLICATION FAILED TO START
+***************************
 
-NoUniqueBeanDefinitionException: expected single matching bean but found 2:
-basicDiscountService, premiumDiscountService
+Description:
 
-**Análisis**
+Parameter 0 of constructor in OrderService required a single bean,
+but 2 were found:
+    - basicDiscountService
+    - premiumDiscountService
 
-Spring no sabe cuál implementación usar porque encuentra dos candidatos válidos.
-Esto demuestra que cuando hay más de un bean del mismo tipo, la inyección se vuelve ambigua y el contenedor lanza una excepción.
+Action:
 
-🔹 Reto 3 — Resolver con @Primary
+Consider marking one bean as @Primary, or use @Qualifier to identify the bean to use.
+```
 
-Para resolver la ambigüedad, se agregó @Primary en BasicDiscountService:
+### ❌ Causa del error
 
+El contenedor no puede decidir automáticamente **cuál bean inyectar** cuando existen **múltiples implementaciones del mismo tipo**.
+
+📌 Excepción:
+`org.springframework.beans.factory.NoUniqueBeanDefinitionException`
+
+---
+
+## 🥇 3. Reto 3 — Resolviendo con @Primary
+
+Activamos `@Primary` en `BasicDiscountService`:
+
+```java
 @Service
 @Primary
 public class BasicDiscountService implements DiscountService {
-public double apply(double amount) { return amount * 0.90; }
-public String name() { return "BASIC"; }
+    //...
 }
+```
 
-**Resultado**
+### 🖥️ Consola
+
+```
+== BEANS DiscountService encontrados ==
+ - com.acm.point3.discounts.BasicDiscountService
+ - com.acm.point3.discounts.PremiumDiscountService
+Total: 2
 == DEMO PUNTO 3 ==
 Estrategia en uso: BASIC
 Total para 100: 90.0
+```
 
- **Análisis**
+### ✅ Explicación
 
-@Primary le dice a Spring qué implementación debe usar por defecto.
+* `@Primary` indica al contenedor que, si hay ambigüedad, **ese bean debe preferirse por defecto**.
+* No se requiere `@Qualifier` en `OrderService`.
+* El sistema arranca correctamente.
 
-Si no se usa @Qualifier, Spring elige automáticamente el bean marcado como @Primary.
+---
 
-Es útil cuando se quiere tener una opción por defecto, sin modificar el código que hace la inyección.
+## 🎯 4. Reto 4 — Forzando un bean con @Qualifier
 
-🔹 Reto 4 — Sustituir con @Qualifier
+Supongamos que la tienda activa una campaña especial y quiere usar la estrategia **PREMIUM**.
 
-Ahora se renombró el bean Premium y se forzó su uso con @Qualifier en el constructor.
+Renombramos el bean o usamos su nombre por defecto, y luego lo especificamos en el constructor.
 
-Clase PremiumDiscountService
+### PremiumDiscountService (renombrado)
+
+```java
 @Service("vipDiscountService")
 public class PremiumDiscountService implements DiscountService {
-public double apply(double amount) { return amount * 0.80; }
-public String name() { return "PREMIUM"; }
+    //...
 }
+```
 
-Clase OrderService
-public OrderService(@Qualifier("vipDiscountService") DiscountService discountService) {
-this.discountService = discountService;
+### OrderService (forzando Premium)
+
+```java
+@Service
+public class OrderService {
+
+    private final DiscountService discountService;
+
+    // Se comenta el constructor anterior y se activa este:
+    public OrderService(@Qualifier("vipDiscountService") DiscountService discountService) {
+        this.discountService = discountService;
+    }
+
+    //...
 }
+```
 
-**Resultado**
+### 🖥️ Consola
+
+```
+== BEANS DiscountService encontrados ==
+ - com.acm.point3.discounts.BasicDiscountService
+ - com.acm.point3.discounts.PremiumDiscountService
+Total: 2
 == DEMO PUNTO 3 ==
 Estrategia en uso: PREMIUM
 Total para 100: 80.0
+```
 
- **Análisis**
+### ✅ Explicación
 
-@Qualifier tiene prioridad sobre @Primary.
+* `@Qualifier` **elimina la ambigüedad indicando explícitamente** qué bean debe inyectarse.
+* Es útil cuando existen múltiples estrategias o configuraciones activas simultáneamente.
+* Tiene **mayor prioridad que `@Primary`** si ambos están presentes.
 
-Permite seleccionar de forma explícita el bean que se desea inyectar.
+---
 
-Es ideal cuando necesitamos usar implementaciones distintas según el contexto.
+## 💤 5. Reto 5 — Beans opcionales con @Autowired(required = false)
 
-🔹 Reto 5 — Uso de @Autowired(required=false)
+Ahora introducimos un bean opcional `SeasonalCampaign`, que **puede o no existir** en el contexto.
 
-Se creó una campaña opcional de navidad que aplica un 5% adicional:
+### Interfaz
 
-Clase ChristmasCampaign
-@Component
-public class ChristmasCampaign implements SeasonalCampaign {
-public double extraOff(double amount) { return amount * 0.95; }
+```java
+public interface SeasonalCampaign {
+    double extraOff(double amount);
 }
+```
 
-En OrderService:
+### Implementación (opcional)
+
+```java
+@Component   // Comentar / descomentar para observar el comportamiento
+public class ChristmasCampaign implements SeasonalCampaign {
+    @Override public double extraOff(double amount) { return amount * 0.95; }
+}
+```
+
+### OrderService (con inyección opcional)
+
+```java
 @Autowired(required = false)
 private SeasonalCampaign seasonalCampaign;
 
 public double checkout(double amount) {
-double base = discountService.apply(amount);
-if (seasonalCampaign != null) {
-base = seasonalCampaign.extraOff(base);
+    double base = discountService.apply(amount);
+    if (seasonalCampaign != null) {
+        base = seasonalCampaign.extraOff(base);
+    }
+    return base;
 }
-return base;
-}
+```
 
-**Resultados esperados**
+### 🖥️ Consola
 
-Con @Component activo:
+#### ✅ Con `@Component` activo:
 
+```
 Estrategia en uso: BASIC
 Total para 100: 85.5
+```
 
+#### ⚙️ Con `@Component` comentado:
 
-Comentando @Component:
-
+```
 Estrategia en uso: BASIC
 Total para 100: 90.0
+```
 
-**Análisis**
+### 🧠 Explicación
 
-@Autowired(required=false) permite que una dependencia sea opcional.
+* `@Autowired(required = false)` permite que la aplicación **siga funcionando incluso si el bean no está presente**.
+* Spring inyecta `null` cuando el bean no existe, evitando una excepción.
+* Útil para dependencias **opcionales o condicionales**.
 
-Si el bean no existe, no se lanza error; simplemente queda como null.
+---
 
-Muy útil para casos donde una funcionalidad depende de si cierto componente está o no disponible.
+## 🧾 6. Conclusiones
 
-🧾 Conclusiones Generales
-Situación	Solución	Descripción
-Dos beans del mismo tipo---> Error NoUniqueBeanDefinitionException	Spring no puede decidir cuál usar.
-Una debe ser la principal---> @Primary	Define una implementación por defecto.
-Se necesita una en específico---> @Qualifier("nombreBean")	Indica explícitamente cuál bean usar.
-Un bean opcional que puede no existir	🕊️ @Autowired(required=false)	Evita errores si el bean no está en el contexto.
- 
-_Reflexión_ 
+| Concepto                            | Descripción                                                                                                                                  |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| ⚙️ **Ambigüedad de beans**          | Ocurre cuando múltiples beans implementan la misma interfaz y Spring no puede decidir cuál inyectar.                                         |
+| 🥇 **@Primary**                     | Indica el bean predeterminado cuando existen múltiples candidatos. Se usa para definir una política o implementación general.                |
+| 🎯 **@Qualifier("nombre")**         | Especifica explícitamente qué bean usar, incluso si hay un `@Primary`. Útil en contextos con varias estrategias.                             |
+| 💤 **@Autowired(required = false)** | Permite inyectar un bean de forma opcional. Si el bean no existe, Spring asigna `null` sin fallar.                                           |
+| 🧠 **Buenas prácticas**             | Usar `@Qualifier` en servicios de propósito específico y `@Primary` para una implementación por defecto. Evitar ambigüedades explícitamente. |
 
-Este laboratorio demuestra que Spring ofrece flexibilidad y control total sobre la inyección de dependencias.
-Aprendí que:
+---
 
-@Primary sirve como una solución predeterminada para evitar conflictos.
+## 💬 Reflexión final
 
-@Qualifier es la forma más precisa de seleccionar un bean.
+Entender cómo Spring **resuelve dependencias** es esencial para diseñar aplicaciones modulares, flexibles y mantenibles.
+El uso consciente de `@Primary`, `@Qualifier` y `@Autowired(required=false)` te permite controlar **qué bean se inyecta, cuándo y bajo qué condiciones**.
 
-@Autowired(required=false) permite manejar dependencias opcionales sin romper la aplicación.
-
-Comprender estas anotaciones es clave para desarrollar sistemas modulares, mantenibles y escalables en Spring Boot.
+🧠 En otras palabras: el contenedor IoC no “adivina” tus intenciones — **tú debes guiarlo con precisión.**
