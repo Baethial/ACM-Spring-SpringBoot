@@ -5,33 +5,19 @@ import com.fasterxml.jackson.annotation.JsonAlias;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Model class representing the top-level structure of the OpenWeatherMap 5-day/3-hour forecast response.
+ * This class is used internally by the application to deserialize the raw API response body.
+ * Implements Serializable as a standard practice for DTOs/models.
+ */
 public class ForecastResponse implements Serializable {
 
-    /*
-     "list": [
-         {
-         "main": {
-             "temp": 288.46,
-             "feels_like": 288.19,
-             "temp_min": 287.75,
-             "temp_max": 288.46,
-             "sea_level": 1001,
-             "humidity": 82,
-         },
-         "weather": [
-             {
-             "main": "Rain",
-             "description": "light rain",
-             }
-         ],
-         "dt_txt": "2025-10-31 18:00:00"
-         },
-        ...
-     ]
-     */
-
+    // The JSON response contains a list of reports under the key "list".
+    // @JsonAlias maps the external "list" key to the internal "weatherResponseList" field.
     @JsonAlias("list")
     private List<WeatherResponse> weatherResponseList;
+
+    // --- Standard POJO Boilerplate (Constructors, Getters, Setters) ---
 
     public ForecastResponse() {
     }
@@ -48,12 +34,18 @@ public class ForecastResponse implements Serializable {
         this.weatherResponseList = weatherResponseList;
     }
 
+    /**
+     * Nested static class representing a single 3-hour forecast report entry in the API's "list" array.
+     * Making it static allows it to be instantiated independently of the outer class.
+     */
     public static class WeatherResponse {
 
-        private Main main;
-        private List<Weather> weather;
+        private Main main; // Holds temperature and humidity details (nested below)
+        private List<Weather> weather; // Holds descriptive weather condition (nested below)
         @JsonAlias("dt_txt")
-        private String timeStamp;
+        private String timeStamp; // Forecast time in "YYYY-MM-DD HH:MM:SS" format
+
+        // --- Standard POJO Boilerplate (Constructors, Getters, Setters) ---
 
         public WeatherResponse() {
         }
@@ -88,6 +80,10 @@ public class ForecastResponse implements Serializable {
             this.timeStamp = timeStamp;
         }
 
+        /**
+         * Nested static class for the 'main' block, containing key numerical data.
+         * The @JsonAlias is necessary for properties that use underscores in the JSON (`feels_like`).
+         */
         public static class Main {
 
             private Double temp;
@@ -98,6 +94,8 @@ public class ForecastResponse implements Serializable {
             @JsonAlias("temp_max")
             private Double tempMax;
             private Double humidity;
+
+            // --- Standard POJO Boilerplate (Constructors, Getters, Setters) ---
 
             public Main() {
             }
@@ -151,10 +149,15 @@ public class ForecastResponse implements Serializable {
             }
         }
 
+        /**
+         * Nested static class for the 'weather' list element, containing descriptive condition.
+         */
         public static class Weather {
 
-            private String main;
-            private String description;
+            private String main; // General condition (e.g., Rain, Clouds, Clear)
+            private String description; // Detailed description (e.g., light rain)
+
+            // --- Standard POJO Boilerplate (Constructors, Getters, Setters) ---
 
             public Weather() {
             }
