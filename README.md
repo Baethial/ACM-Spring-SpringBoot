@@ -8,7 +8,7 @@
 <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Spring_Framework_Logo_2018.svg" width="200" alt="Spring Logo"/>
 
 ### 🎓 Facultad de Ingeniería — Universidad Distrital Francisco José de Caldas  
-### 👩‍💻 Grupo GiWeb — ACM Student Chapter  
+### 👩‍💻 Grupo GiWeb #9 — ACM Student Chapter  
 
 ---
 
