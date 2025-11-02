@@ -1,1 +1,5 @@
 .idea/
+
+# Local build/output
+out/
+
