@@ -115,7 +115,7 @@ Cada carpeta contiene:
 
 | Rol                              | Nombre                                                       | GitHub / Contacto             |
 | :------------------------------- | :----------------------------------------------------------- | :---------------------------- |
-| 🧑‍💻 Estudiante / Desarrollador | *Nelson Navarro* | [GitHub]([https://github.com/](https://github.com/Nelsonn-bit)) |
+| 🧑‍💻 Estudiante / Desarrollador | *Nelson De Jesús Navarro De La Rosa* | [GitHub]([https://github.com/](https://github.com/Nelsonn-bit)) |
 | 🧑‍💻 Estudiante / Desarrollador | *Ianjaner Alfonso Beltran Guañarita* | [GitHub]([https://github.com/](https://github.com/ianjaner75)) |
 | 🧑‍💻 Estudiante / Desarrollador | *Jorge Andrés Quiceno Sanabria* | [GitHub]([https://github.com/](https://github.com/Baethial)) |
 
