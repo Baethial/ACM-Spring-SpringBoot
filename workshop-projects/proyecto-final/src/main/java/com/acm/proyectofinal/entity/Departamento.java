@@ -1,5 +1,6 @@
 package com.acm.proyectofinal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Departamento {
     private Long idDepartamento;
 
     private String nombre;
-
-    @OneToMany(mappedBy = "departamento")
+    @JsonIgnore
+    @OneToMany(mappedBy = "departamento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Ciudad> ciudades;
 }
