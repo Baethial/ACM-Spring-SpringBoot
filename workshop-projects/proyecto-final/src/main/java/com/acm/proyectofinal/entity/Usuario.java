@@ -1,5 +1,6 @@
 package com.acm.proyectofinal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore; // Importante para romper el ciclo
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,6 +34,10 @@ public class Usuario {
     @JoinColumn(name = "idCiudadFK")
     private Ciudad ciudad;
 
+    // AÑADE @JsonIgnore AQUÍ
+    // Cuando serializamos una Venta, se incluye el Usuario, y este no intentará serializar
+    // recursivamente su lista de ventas, rompiendo el ciclo.
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente")
     private List<Venta> ventas;
 }

@@ -1,5 +1,6 @@
 package com.acm.proyectofinal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,13 +24,13 @@ public class Producto {
     private String descripcion;
     private LocalDateTime fechaCreacion;
     private LocalDateTime fechaActualizacion;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "producto")
     private List<AlmacenProducto> almacenProductos;
 
     @OneToMany(mappedBy = "producto")
     private List<ProductoCategoria> productoCategorias;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "producto")
     private List<VentaProducto> ventaProductos;
 }

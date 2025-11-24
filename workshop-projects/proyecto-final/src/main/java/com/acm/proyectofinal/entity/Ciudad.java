@@ -1,5 +1,6 @@
 package com.acm.proyectofinal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,5 +24,6 @@ public class Ciudad {
     private String nombre;
 
     @OneToMany(mappedBy = "ciudad")
+    @JsonIgnore
     private List<Almacen> almacenes;
 }

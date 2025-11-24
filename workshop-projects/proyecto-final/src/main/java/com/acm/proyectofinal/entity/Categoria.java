@@ -1,5 +1,6 @@
 package com.acm.proyectofinal.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +18,7 @@ public class Categoria {
     private Long idCategoria;
 
     private String nombre;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "categoria")
     private List<ProductoCategoria> productoCategorias;
 }
