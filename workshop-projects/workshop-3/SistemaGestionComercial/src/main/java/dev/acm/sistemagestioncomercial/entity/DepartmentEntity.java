@@ -6,23 +6,19 @@ import lombok.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "almacenes")
+@Table(name = "departamentos")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StoreEntity implements Serializable {
+public class DepartmentEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_almacen")
+    @Column(name = "id_departamento")
     private Long id;
     @Column(name = "nombre")
     private String name;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_ciudad_fk")
-    private CityEntity city;
 
 }

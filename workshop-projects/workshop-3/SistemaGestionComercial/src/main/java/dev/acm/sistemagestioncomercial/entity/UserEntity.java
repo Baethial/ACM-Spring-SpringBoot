@@ -36,6 +36,10 @@ public class UserEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     // This annotation goes in the class that handles the relationship
     @JoinColumn(name = "id_rol_fk", nullable = false)
-    private RoleEntity roleEntity;
+    private RoleEntity role;
     // private City city;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_ciudad_fk")
+    private CityEntity city;
 }

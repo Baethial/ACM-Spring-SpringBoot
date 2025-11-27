@@ -1,5 +1,6 @@
 package dev.acm.sistemagestioncomercial.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -7,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "productos")
@@ -33,4 +35,11 @@ public class ProductEntity implements Serializable {
     @Column(name = "fecha_actualizacion")
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinTable(name = "productos_categorias",
+            joinColumns = @JoinColumn(name = "id_producto_fk"),
+            inverseJoinColumns = @JoinColumn(name = "id_categoria_fk"))
+    private List<CategoryEntity> categories;
 }

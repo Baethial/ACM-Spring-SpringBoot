@@ -24,7 +24,7 @@ public class CategoryEntity implements Serializable {
 
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(name = "productos_categorias",
-            joinColumns = @JoinColumn(name = "id_categoria"),
-            inverseJoinColumns = @JoinColumn(name = "id_producto"))
+            joinColumns = @JoinColumn(name = "id_categoria_fk"),
+            inverseJoinColumns = @JoinColumn(name = "id_producto_fk"))
     private List<ProductEntity> products;
 }
