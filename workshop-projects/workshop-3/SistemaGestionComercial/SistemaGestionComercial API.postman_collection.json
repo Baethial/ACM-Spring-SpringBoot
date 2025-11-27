@@ -1,0 +1,1005 @@
+{
+	"info": {
+		"_postman_id": "82e3ee8e-9361-446f-96d6-5d04ed0a17df",
+		"name": "SistemaGestionComercial API",
+		"description": "Complete API testing collection for the Spring Boot Commerce System.\n\n**Prerequisites:**  \nEnsure the application is running on localhost:8080.\n\n**Order of Execution:**  \nFor fresh databases, execute POST requests in this order to satisfy Foreign Key constraints:\n\n1. Departments\n    \n2. Cities\n    \n3. Roles\n    \n4. Users\n    \n5. Categories\n    \n6. Stores\n    \n7. Products\n    \n8. Sales",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "32590388"
+	},
+	"item": [
+		{
+			"name": "1. Departments",
+			"item": [
+				{
+					"name": "POST Create Department",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Cundinamarca\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/departments"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Departments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/departments"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Department By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/departments/1"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Department",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Antioquia\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/departments"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Department",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/departments/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for DepartmentEntity [cite: 6, 141]"
+		},
+		{
+			"name": "2. Cities",
+			"item": [
+				{
+					"name": "POST Create City",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Bogotá\",\n    \"department\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/cities"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Cities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/cities"
+					},
+					"response": []
+				},
+				{
+					"name": "GET City By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/cities/1"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update City",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Medellín\",\n    \"department\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/cities"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE City",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/cities/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for CityEntity. Requires Department to exist. [cite: 4, 134]"
+		},
+		{
+			"name": "3. Roles",
+			"item": [
+				{
+					"name": "POST Create Role",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"role\": \"ROLE_ADMIN\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/roles"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Roles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/roles"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Role By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/roles/1"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"role\": \"ROLE_USER\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/roles"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Role",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/roles/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for RoleEntity. Enums: ROLE_USER, ROLE_ADMIN, ROLE_MODERATOR [cite: 16, 19, 162]"
+		},
+		{
+			"name": "4. Users",
+			"item": [
+				{
+					"name": "POST Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Juan\",\n    \"lastName\": \"Perez\",\n    \"email\": \"juan.perez@example.com\",\n    \"password\": \"secret123\",\n    \"phoneNumber\": \"3001234567\",\n    \"registrationDate\": \"2023-10-01T10:00:00\",\n    \"role\": {\n        \"id\": 1\n    },\n    \"city\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "GET User By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/users/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GET User By Last Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/last_name/?lastName=Perez",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"last_name",
+								""
+							],
+							"query": [
+								{
+									"key": "lastName",
+									"value": "Perez"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Users By City",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/city/?city=Bogotá",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"city",
+								""
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Bogotá"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Users By Department",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/department/?department=Cundinamarca",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"department",
+								""
+							],
+							"query": [
+								{
+									"key": "department",
+									"value": "Cundinamarca"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Users By Name Fragment",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/name/?nameFragment=Jua",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"name",
+								""
+							],
+							"query": [
+								{
+									"key": "nameFragment",
+									"value": "Jua"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update User",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"firstName\": \"Juan Updated\",\n    \"lastName\": \"Perez\",\n    \"email\": \"juan.updated@example.com\",\n    \"role\": {\n        \"id\": 1\n    },\n    \"city\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/users"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/users/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for UserEntity. Requires Role and City. [cite: 29, 187]"
+		},
+		{
+			"name": "5. Categories",
+			"item": [
+				{
+					"name": "POST Create Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Electronics\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Category By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/categories/1"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Category",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Home Appliances\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Category",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/categories/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for CategoryEntity [cite: 2, 127]"
+		},
+		{
+			"name": "6. Stores",
+			"item": [
+				{
+					"name": "POST Create Store",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Almacén Central\",\n    \"city\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/stores"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Stores",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/stores"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Store By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/stores/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Stores By City",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/stores/city/?city=Bogotá",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"stores",
+								"city",
+								""
+							],
+							"query": [
+								{
+									"key": "city",
+									"value": "Bogotá"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Store",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Almacén Norte\",\n    \"city\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/stores"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Store",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/stores/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for StoreEntity. Requires City. [cite: 27, 179]"
+		},
+		{
+			"name": "7. Products",
+			"item": [
+				{
+					"name": "POST Create Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Laptop Gamer\",\n    \"price\": 4500.00,\n    \"description\": \"High performance laptop\",\n    \"categories\": [\n        {\n            \"id\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/products/"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/products/"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Product By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/products/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products By Category",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/category/?categoryName=Electronics",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"category",
+								""
+							],
+							"query": [
+								{
+									"key": "categoryName",
+									"value": "Electronics"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products By Price Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/price/?minPrice=1000&maxPrice=5000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"price",
+								""
+							],
+							"query": [
+								{
+									"key": "minPrice",
+									"value": "1000"
+								},
+								{
+									"key": "maxPrice",
+									"value": "5000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products Ordered Price Desc",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/products/price_order_desc/"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products Ordered Price Asc",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/products/price_order_asc/"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products Created After Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/creation_date/?date=2023-01-01T00:00:00",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"creation_date",
+								""
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2023-01-01T00:00:00"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Products By Store Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products/store/?storeName=Almacén Central",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"store",
+								""
+							],
+							"query": [
+								{
+									"key": "storeName",
+									"value": "Almacén Central"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Best Seller Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/products/best_sellers/"
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"name\": \"Laptop Pro\",\n    \"price\": 5000.00,\n    \"categories\": [\n        {\n            \"id\": 1\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/products/"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/products/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for ProductEntity. Note the controller mapping has a trailing slash. [cite: 8, 148]"
+		},
+		{
+			"name": "8. Sales",
+			"item": [
+				{
+					"name": "POST Create Sale",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sellDate\": \"2023-11-20T15:30:00\",\n    \"total\": 12000.50,\n    \"userEntity\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/sales"
+					},
+					"response": []
+				},
+				{
+					"name": "GET All Sales",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/sales"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Sale By ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{base_url}}/sales/1"
+					},
+					"response": []
+				},
+				{
+					"name": "GET Sales By User ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales/user/?userId=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sales",
+								"user",
+								""
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Total Sales By Date",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales/date/?date=2023-11-20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sales",
+								"date",
+								""
+							],
+							"query": [
+								{
+									"key": "date",
+									"value": "2023-11-20"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Sales Greater Than Amount",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sales/greater/?amount=1000",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sales",
+								"greater",
+								""
+							],
+							"query": [
+								{
+									"key": "amount",
+									"value": "1000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Sale",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": 1,\n    \"sellDate\": \"2023-11-20T15:30:00\",\n    \"total\": 15000.00,\n    \"userEntity\": {\n        \"id\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{base_url}}/sales"
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE Sale",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{base_url}}/sales/1"
+					},
+					"response": []
+				}
+			],
+			"description": "Operations for SaleEntity. Requires User. [cite: 21, 169]"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
